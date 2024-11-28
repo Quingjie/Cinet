@@ -3,7 +3,7 @@
 export default function Home() {
   return (
     <div>
-      <h1>Bienvenue sur Cinetica!</h1>
+      <h1>Bienvenue sur Cinetica !</h1>
     </div>
   );
 }

@@ -10,12 +10,12 @@ export const ApplicationLayout = ({ children }: PropsWithChildren) => {
     <div
       style={{
         display: "grid",
+        flex :1,
         gridTemplateAreas: `
           "header header"
           "sidebar content"`,
         gridTemplateColumns: "240px 1fr",
-        gridTemplateRows: "80px 1fr",
-        height: "100vh",
+        gridTemplateRows: "80px 1fr"
       }}
     >
       {children}

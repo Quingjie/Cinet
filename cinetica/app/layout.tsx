@@ -2,14 +2,14 @@
 
 import { SessionProvider } from "next-auth/react"; // Import du SessionProvider
 import "./globals.css";
+import { PropsWithChildren } from "react";
+
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: PropsWithChildren<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
