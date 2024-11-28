@@ -1,5 +1,6 @@
-'use client';
+"use client";
 
+import { SessionProvider } from "next-auth/react"; // Import du SessionProvider
 import "./globals.css";
 
 export default function RootLayout({
@@ -12,7 +13,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>{children}</body>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

@@ -1,10 +1,13 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import "../globals.css"; // Assure-toi que ce fichier existe et est bien référencé
+import "../globals.css";
 
 const anton = localFont({
-  src: "../fonts/Anton,Antonio/Anton/Anton-Regular.ttf", // Vérifie que ce chemin est correct
+  src: "../fonts/Anton,Antonio/Anton/Anton-Regular.ttf",
   weight: "400",
   style: "normal",
   variable: "--font-anton",
@@ -15,14 +18,23 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session } = useSession(); // Vérifie si l'utilisateur est connecté
+  const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setIsHydrated(true); // Assure-toi que le rendu client est bien effectué
+    setIsHydrated(true); // Assure que le rendu client est effectué
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      // Redirige l'utilisateur connecté vers /menu
+      router.push("/menu");
+    }
+  }, [session, router]);
+
   if (!isHydrated) {
-    return null; // Empêche les incohérences entre le rendu serveur et client
+    return null; // Empêche un flash d'écran vide ou des incohérences
   }
 
   return (
@@ -33,7 +45,7 @@ export default function LoginLayout({
       <body className="bg-gray-100 flex justify-center items-center min-h-screen">
         <div className="w-full max-w-md p-4">
           <div className="flex justify-center">
-            <h1 className={`text-4xl ${anton.className}`}/>
+            <h1 className={`text-4xl ${anton.className}`}></h1>
           </div>
           <main className="mt-10">{children}</main>
         </div>
