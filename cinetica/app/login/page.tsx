@@ -42,7 +42,7 @@ export default function CardWithForm() {
     if (res?.error) {
       setErreur("L'adresse e-mail ou le mot de passe est incorrect");
     } else {
-      window.location.href = "/dashboard"; // Rediriger après connexion réussie
+      window.location.href = "./menu"; // Rediriger après connexion réussie
     }
   };
 

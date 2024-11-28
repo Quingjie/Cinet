@@ -1,6 +1,11 @@
 import { PropsWithChildren } from "react";
+import { usePathname } from "next/navigation";
 
 export const ApplicationLayout = ({ children }: PropsWithChildren) => {
+  const pathname = usePathname(); 
+  if (pathname === "/login") {
+    return <>{children}</>;
+  }
   return (
     <div
       style={{

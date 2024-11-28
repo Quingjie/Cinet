@@ -26,14 +26,14 @@ export default function LoginLayout({
   }
 
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
-        <link rel="icon" href="/logo.webp" />
+        <link rel="icon" href="/logo1.jpg" />
       </head>
       <body className="bg-gray-100 flex justify-center items-center min-h-screen">
         <div className="w-full max-w-md p-4">
           <div className="flex justify-center">
-            <h1 className={`text-4xl ${anton.className}`}>Cinetica</h1>
+            <h1 className={`text-4xl ${anton.className}`}/>
           </div>
           <main className="mt-10">{children}</main>
         </div>
