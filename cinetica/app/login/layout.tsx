@@ -6,7 +6,6 @@ import { ReactNode } from "react";
 import localFont from "next/font/local";
 import "../globals.css";
 
-// Configuration de la police Anton
 const anton = localFont({
   src: "../fonts/Anton,Antonio/Anton/Anton-Regular.ttf",
   weight: "400",
@@ -18,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html 
       lang="fr"
-      className={`${anton.variable} dark`}
+      className={anton.variable}
     >
       <head>
         <link rel="icon" href="/logo1.jpg" />
@@ -27,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`
           ${anton.variable}
           bg-gray-100 
-          dark:bg-black
+          dark:bg-gray-900
           flex 
           justify-center 
           items-center 
@@ -37,8 +36,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <ThemeProvider 
           attribute="class" 
-          defaultTheme="dark" 
-          enableSystem 
+          defaultTheme="system" 
+          enableSystem
           disableTransitionOnChange
         >
           <SessionProvider>

@@ -51,17 +51,27 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-[350px] shadow dark:bg-black">
+    <Card className="w-[350px] shadow 
+      bg-white           // Fond blanc pour le mode clair
+      dark:bg-black      // Fond noir pour le mode sombre 
+      dark:border-gray-700  // Bordure grise foncée en mode sombre
+    ">
       <CardHeader className="flex justify-center items-center">
         <Image
           src={Logo}
           alt="Logo Cinetica"
           className="w-24 h-24 items-center rounded-full"
         />
-        <CardTitle className={`flex justify-center text-3xl ${anton.className} dark:text-white`}>
+        <CardTitle className={`flex justify-center text-3xl ${anton.className} 
+          text-[#3E1212]     // Couleur texte mode clair
+          dark:text-white    // Couleur texte mode sombre
+        `}>
           Cinetica
         </CardTitle>
-        <CardDescription className="flex justify-center text-gray-600 dark:text-gray-300">
+        <CardDescription className="
+          text-gray-600      // Couleur description mode clair 
+          dark:text-gray-300 // Couleur description mode sombre
+        ">
           Connexion
         </CardDescription>
       </CardHeader>
