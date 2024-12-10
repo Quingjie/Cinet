@@ -23,7 +23,16 @@ export const Content = ({ children }: PropsWithChildren) => {
   // Affiche le contenu si l'utilisateur est authentifié
   if (session) {
     return (
-      <div className="bg-white p-6" style={{ gridArea: "content" }}>
+      <div 
+        className={`
+          p-6 
+          ${localStorage.theme === 'dark' || 
+             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
+             ? 'bg-gray-900 text-white' 
+             : 'bg-white text-black'}
+        `} 
+        style={{ gridArea: "content" }}
+      >
         {children}
       </div>
     );
