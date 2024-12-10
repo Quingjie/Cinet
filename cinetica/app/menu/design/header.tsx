@@ -1,10 +1,11 @@
 'use client';
 
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Logo from "../../logo1.jpg";
 import localFont from "next/font/local";
+import { useTheme } from "../theme-provider";
 
 const anton = localFont({
   src: "../../fonts/Anton,Antonio/Anton/Anton-Regular.ttf",
@@ -15,38 +16,28 @@ const anton = localFont({
 
 export const Header = (props: PropsWithChildren) => {
   const { data: session } = useSession();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { mode, theme, setMode } = useTheme();
 
-  useEffect(() => {
-    // Vérifie le mode sombre au chargement
-    const checkDarkMode = () => {
-      return localStorage.theme === 'dark' || 
-             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    };
-    
-    setIsDarkMode(checkDarkMode());
+  const getNextMode = () => {
+    switch(mode) {
+      case 'auto': return 'light';
+      case 'light': return 'dark';
+      case 'dark': return 'auto';
+    }
+  };
 
-    // Écoute les changements de préférence système
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => setIsDarkMode(checkDarkMode());
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newMode = !isDarkMode;
-    setIsDarkMode(newMode);
-    localStorage.theme = newMode ? 'dark' : 'light';
-    
-    // Optionnel : Ajouter un changement de classe sur l'élément racine
-    document.documentElement.classList.toggle('dark', newMode);
+  const getModeLabel = () => {
+    switch(mode) {
+      case 'auto': return '🖥️ Auto';
+      case 'light': return '☀️ Clair';
+      case 'dark': return '🌙 Sombre';
+    }
   };
 
   return (
     <div
       className={`flex items-center justify-between p-4 ${
-        isDarkMode 
+        theme === 'dark' 
           ? 'bg-gray-800 text-white' 
           : 'bg-gray-100 text-black'
       }`}
@@ -58,7 +49,6 @@ export const Header = (props: PropsWithChildren) => {
     >
       {props.children}
 
-      {/* Logo, titre et message de bienvenue */}
       <div className="flex items-center space-x-4">
         <Image
           src={Logo}
@@ -73,44 +63,39 @@ export const Header = (props: PropsWithChildren) => {
         )}
       </div>
 
-      {/* Barre de recherche et bouton de déconnexion */}
       <div className="flex items-center space-x-4">
         {session ? (
           <>
             <input
               placeholder="Search"
               className={`p-2 border rounded w-64 ${
-                isDarkMode 
-                  ? 'bg-gray-700 text-white border-gray-600' 
+                theme === 'dark'
+                  ? 'bg-[#2F3E52] text-white border-gray-600' 
                   : 'bg-white text-black'
               }`}
             />
             <button
               onClick={() => signOut()}
-              className={`px-4 py-2 rounded ${
-                isDarkMode 
-                  ? 'bg-red-700 text-white' 
-                  : 'bg-red-500 text-white'
+              className={`px-4 py-2 rounded-full ${
+                theme === 'dark'
+                  ? 'bg-[#8E8FC3] text-white dark:text-black' 
+                  : 'bg-[#8E8FC3] text-white'
               }`}
             >
               Déconnexion
             </button>
             <button
-              onClick={toggleDarkMode}
-              className={`px-4 py-2 rounded ${
-                isDarkMode 
-                  ? 'bg-gray-700 text-white' 
-                  : 'bg-gray-200 text-black'
+              onClick={() => setMode(getNextMode())}
+              className={`p-2 border rounded w-32 ${
+                theme === 'dark'
+                  ? 'bg-[#2F3E52] text-white border-gray-600' 
+                  : 'bg-white text-black'
               }`}
             >
-              {isDarkMode ? '☀️ Clair' : '🌙 Sombre'}
+              {getModeLabel()}
             </button>
           </>
-        ) : (
-          <>
-            {/* Bouton de connexion commenté */}
-          </>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -52,9 +52,10 @@ export default function LoginPage() {
 
   return (
     <Card className="w-[350px] shadow 
-      bg-white           // Fond blanc pour le mode clair
-      dark:bg-black      // Fond noir pour le mode sombre 
-      dark:border-gray-700  // Bordure grise foncée en mode sombre
+      bg-white
+      border-gray-300   
+      dark:bg-gray-800     
+      dark:border-gray-500
     ">
       <CardHeader className="flex justify-center items-center">
         <Image
@@ -62,15 +63,15 @@ export default function LoginPage() {
           alt="Logo Cinetica"
           className="w-24 h-24 items-center rounded-full"
         />
-        <CardTitle className={`flex justify-center text-3xl ${anton.className} 
-          text-[#3E1212]     // Couleur texte mode clair
-          dark:text-white    // Couleur texte mode sombre
+        <CardTitle className={`flex justify-center text-3xl ${anton.className}
+          text-black
+          dark:text-white
         `}>
           Cinetica
         </CardTitle>
         <CardDescription className="
-          text-gray-600      // Couleur description mode clair 
-          dark:text-gray-300 // Couleur description mode sombre
+          text-gray-700
+          dark:text-gray-300
         ">
           Connexion
         </CardDescription>
@@ -78,10 +79,10 @@ export default function LoginPage() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5 text-[#3E1212] dark:text-white">
+            <div className="flex flex-col space-y-1.5 text-black dark:text-white">
               <Label htmlFor="email">E-mail</Label>
               <Input
-                className="bg-[#C9C9C9] rounded-full dark:bg-[#C9C9C9] dark:text-[#3E1212]"
+                className="bg-[#E8F0FD] rounded-full border-gray-300 dark:bg-[#2f3e52] dark:text-[#8E8FC3] dark:border-gray-600"
                 id="email"
                 type="email"
                 placeholder="Votre adresse e-mail"
@@ -90,25 +91,26 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="flex flex-col space-y-1.5 text-[#3E1212] dark:text-white">
+            <div className="flex flex-col space-y-1.5 text-black dark:text-white">
               <Label htmlFor="password">Mot de passe</Label>
               <Input
-                className="bg-[#C9C9C9] rounded-full dark:bg-[#C9C9C9] dark:text-[#3E1212]"
+                className="bg-[#E8F0FD] rounded-full border-gray-300 dark:bg-[#2f3e52] dark:text-[#8E8FC3] dark:border-gray-600"
                 id="password"
                 type="password"
                 placeholder="Votre mot de passe"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                style={{ WebkitTextFillColor: "unset" }}
               />
             </div>
             {error && (
               <div className="text-red-500 text-sm">{error}</div>
             )}
           </div>
-          <CardFooter className="flex justify-center mt-5">
+            <CardFooter className="flex justify-center mt-5">
             <Button 
-              className="bg-[#8E8FC3] rounded-full text-white dark:text-black" 
+              className="bg-[#8E8FC3] rounded-full text-white dark:text-black hover:bg-black dark:hover:bg-white" 
               type="submit"
             >
               Connexion

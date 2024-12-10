@@ -18,8 +18,9 @@ html, body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    color-scheme: light;
+    --background: white;
+    --foreground: black;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -53,8 +54,9 @@ html, body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    color-scheme: dark;
+    --background: #1a202c;
+    --foreground: white;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
@@ -94,5 +96,7 @@ html, body {
   }
   body {
     @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }

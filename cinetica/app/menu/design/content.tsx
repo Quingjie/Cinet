@@ -3,34 +3,35 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "../theme-provider";
 
 export const Content = ({ children }: PropsWithChildren) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { theme } = useTheme();
 
   useEffect(() => {
-    // Redirige vers /login si l'utilisateur n'est pas authentifié
+    // Redirect to /login if user is not authenticated
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status, router]);
 
-  // Affiche un message de chargement pendant que l'état de la session est en cours de vérification
+  // Show loading message while session status is being verified
   if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  // Affiche le contenu si l'utilisateur est authentifié
+  // Show content if user is authenticated
   if (session) {
     return (
-      <div 
+      <div
         className={`
           p-6 
-          ${localStorage.theme === 'dark' || 
-             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
-             ? 'bg-gray-900 text-white' 
-             : 'bg-white text-black'}
-        `} 
+          ${theme === 'dark' 
+            ? 'bg-gray-900 text-white' 
+            : 'bg-white text-black'}
+        `}
         style={{ gridArea: "content" }}
       >
         {children}
@@ -38,6 +39,6 @@ export const Content = ({ children }: PropsWithChildren) => {
     );
   }
 
-  // Optionnel : Affiche un message si l'utilisateur n'est pas authentifié
+  // Optional: Display nothing if user is not authenticated
   return null;
 };

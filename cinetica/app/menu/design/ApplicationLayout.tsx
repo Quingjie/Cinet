@@ -1,26 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
+import { useTheme } from "../theme-provider";
 
 export const ApplicationLayout = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Vérifie le mode sombre au chargement
-    const checkDarkMode = () => {
-      return localStorage.theme === 'dark' || 
-             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    };
-    
-    setIsDarkMode(checkDarkMode());
-
-    // Écoute les changements de préférence système
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => setIsDarkMode(checkDarkMode());
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  const { theme } = useTheme();
 
   if (pathname === "/login") {
     return <>{children}</>;
@@ -29,7 +13,7 @@ export const ApplicationLayout = ({ children }: PropsWithChildren) => {
   return (
     <div
       className={`grid flex-1 ${
-        isDarkMode 
+        theme === 'dark' 
           ? 'bg-gray-800 text-white' 
           : 'bg-white text-black'
       }`}

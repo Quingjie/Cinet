@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { BookmarkCheck, MonitorPlay, Popcorn, Telescope, UserRound } from "lucide-react";
+import { useTheme } from '../theme-provider';
 
 import {
   SidebarContent,
@@ -12,29 +13,12 @@ import {
 } from "@/components/ui/sidebar";
 
 export const Sidebar = ({ children }: PropsWithChildren) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Vérifie le mode sombre au chargement
-    const checkDarkMode = () => {
-      return localStorage.theme === 'dark' || 
-             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    };
-    
-    setIsDarkMode(checkDarkMode());
-
-    // Écoute les changements de préférence système
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => setIsDarkMode(checkDarkMode());
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  const { theme } = useTheme();
 
   return (
     <div 
       className={`h-full ${
-        isDarkMode 
+        theme === 'dark' 
           ? 'bg-gray-900 text-white' 
           : 'bg-white text-black'
       }`} 
