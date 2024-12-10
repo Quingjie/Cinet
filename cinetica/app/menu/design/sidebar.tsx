@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { BookmarkCheck, MonitorPlay, Popcorn, Telescope, UserRound } from "lucide-react";
 
 import {
@@ -12,12 +12,39 @@ import {
 } from "@/components/ui/sidebar";
 
 export const Sidebar = ({ children }: PropsWithChildren) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Vérifie le mode sombre au chargement
+    const checkDarkMode = () => {
+      return localStorage.theme === 'dark' || 
+             (!(localStorage.theme) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    };
+    
+    setIsDarkMode(checkDarkMode());
+
+    // Écoute les changements de préférence système
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => setIsDarkMode(checkDarkMode());
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   return (
-    <div className="bg-white h-full" style={{ gridArea: "sidebar" }}>
+    <div 
+      className={`h-full ${
+        isDarkMode 
+          ? 'bg-gray-900 text-white' 
+          : 'bg-white text-black'
+      }`} 
+      style={{ gridArea: "sidebar" }}
+    >
       {children}
     </div>
   );
 };
+
 
 const item = [
   {
