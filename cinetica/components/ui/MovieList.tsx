@@ -1,24 +1,18 @@
-"use client";
-import { useFetchMovies } from "@/hooks/useFetchMovies";
+import MovieCard from './MovieCard';
+import { Movie } from '@/app/entities/movie';
 
-export const MovieList = () => {
-  const { data: movies, isLoading, isError } = useFetchMovies();
+interface MovieListProps {
+  movies: Movie[];
+}
 
-  if (isLoading) return <div>Chargement des films...</div>;
-  if (isError) return <div>Une erreur est survenue</div>;
-
+const MovieList: React.FC<MovieListProps> = ({ movies }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {movies?.map((movie) => (
-        <div key={movie.id} className="card">
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-          />
-          <h3>{movie.title}</h3>
-          <p>{movie.overview}</p>
-        </div>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      {movies.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
       ))}
     </div>
   );
 };
+
+export default MovieList;

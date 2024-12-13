@@ -1,7 +1,7 @@
 export interface Show {
-    id: number;
-    name: string;
+    title: string;
+    release_date: string;
     overview: string;
-    first_air_date: string;
-    poster_path: string
+    poster_path: string;
+    vote_average: number;
 }
