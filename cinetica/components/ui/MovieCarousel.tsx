@@ -1,6 +1,7 @@
 //components/ui/MovieCarousel.tsx
 import React from "react";
 import { Movie } from '@/app/entities/movie';
+import MovieCard from "./MovieCard";
 
 interface MovieCarouselProps {
   movies: Movie[];
@@ -9,32 +10,23 @@ interface MovieCarouselProps {
 
 const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies, pageMode }) => {
   // Styles conditionnels en fonction du mode
-  const cardStyle =
+  const carouselStyle =
     pageMode === "primary"
       ? "bg-blue-500 text-white hover:bg-blue-600"
       : "bg-green-500 text-white hover:bg-green-600";
 
   return (
-    <div className="p-4 rounded-lg">
+    <div className={`p-4 rounded-lg ${carouselStyle}`}>
       <h2 className="text-xl font-bold mb-4">
         {pageMode === "primary" ? "Primary Mode" : "Secondary Mode"}
       </h2>
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         {movies.map((movie) => (
-          <div
+          <MovieCard
             key={movie.id}
-            className={`flex flex-col items-center text-center rounded-lg p-4 shadow ${cardStyle}`}
-          >
-          {movie.poster_path && ( // Ajoutez une vérification pour poster_path
-            <img
-              src={movie.poster_path}
-              alt={movie.title}
-              className="rounded-lg"
-            />
-          )}
-            <p className="text-sm font-medium mt-2">{movie.title}</p>
-            <p className="text-xs">{movie.release_date}</p>
-          </div>
+            movie={movie}
+            theme={pageMode === "primary" ? "light" : "dark"}
+          />
         ))}
       </div>
     </div>
