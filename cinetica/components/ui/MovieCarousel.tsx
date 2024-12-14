@@ -1,35 +1,54 @@
 //components/ui/MovieCarousel.tsx
-import React from "react";
-import { Movie } from '@/app/entities/movie';
+import * as React from "react";
 import MovieCard from "./MovieCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Movie } from '@/app/entities/movie';
 
 interface MovieCarouselProps {
   movies: Movie[];
-  pageMode: "primary" | "secondary"; // Modes définis pour les styles
+  pageMode: "primary" | "secondary";
 }
 
 const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies, pageMode }) => {
-  // Styles conditionnels en fonction du mode
-  const carouselStyle =
-    pageMode === "primary"
-      ? "bg-blue-500 text-white hover:bg-blue-600"
-      : "bg-green-500 text-white hover:bg-green-600";
-
   return (
-    <div className={`p-4 rounded-lg ${carouselStyle}`}>
-      <h2 className="text-xl font-bold mb-4">
-        {pageMode === "primary" ? "Primary Mode" : "Secondary Mode"}
-      </h2>
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+    <Carousel 
+      className="w-full max-w-7xl" 
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+    >
+      <CarouselContent>
         {movies.map((movie) => (
-          <MovieCard
+          <CarouselItem 
             key={movie.id}
-            movie={movie}
-            theme={pageMode === "primary" ? "light" : "dark"}
-          />
+            className="
+              basis-full 
+              sm:basis-1/2 
+              md:basis-1/3 
+              lg:basis-1/4 
+              xl:basis-1/5 
+              2xl:basis-1/6 
+              p-2
+            "
+          >
+            <MovieCard
+              movie={movie}
+              theme={pageMode === "primary" ? "light" : "dark"}
+              size="small"
+            />
+          </CarouselItem>
         ))}
-      </div>
-    </div>
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   );
 };
 

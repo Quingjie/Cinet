@@ -42,8 +42,8 @@ export async function GET() {
 
     const shows: Show[] = data.results.map((show: any) => ({
       id: show.id,
-      name: show.name,
-      first_air_date: show.first_air_date,
+      title: show.name,
+      release_date: show.first_air_date,
       overview: show.overview,
       poster_path: show.poster_path ? `https://image.tmdb.org/t/p/w500${show.poster_path}` : null,
       vote_average: show.vote_average || 0,

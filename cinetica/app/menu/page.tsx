@@ -24,9 +24,6 @@ export default function Home() {
   
   return (
     <div>
-      <h1>Bienvenue sur Cinetica !</h1>
-      <p>Connecté en tant que {session.user.name}</p>
-      <p>Email : {session.user.email}</p>
     </div>
   );
 }

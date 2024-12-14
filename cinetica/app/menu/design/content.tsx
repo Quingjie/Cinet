@@ -22,8 +22,11 @@ export const Content = ({ children }: PropsWithChildren) => {
   const { theme } = useTheme();
 
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [shows, setShows] = useState<Movie[]>([]); // Nouvel état pour les séries
+  const [loadingMovies, setLoadingMovies] = useState(true);
+  const [loadingShows, setLoadingShows] = useState(true);
+  const [errorMovies, setErrorMovies] = useState<string | null>(null);
+  const [errorShows, setErrorShows] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -34,37 +37,61 @@ export const Content = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        setLoading(true);
-        const res = await fetch("/api/movie/now-playing"); 
-      
-        console.log("Réponse fetch status :", res.status);
+        setLoadingMovies(true);
+        const res = await fetch("/api/movie/now-playing");
+        console.log("Réponse fetch films status :", res.status);
         const data = await res.json();
         if (res.ok) {
           setMovies(data);
         } else {
-          console.error("Détails erreur API :", data);
-          setError(data.error || "Erreur lors de la récupération des films");
+          console.error("Détails erreur API films :", data);
+          setErrorMovies(data.error || "Erreur lors de la récupération des films");
         }
       } catch (error) {
-        console.error("Erreur réseau :", error);
-        setError("Erreur de connexion");
+        console.error("Erreur réseau films :", error);
+        setErrorMovies("Erreur de connexion pour les films");
       } finally {
-        setLoading(false);
+        setLoadingMovies(false);
+      }
+    };
+
+    const fetchShows = async () => {
+      try {
+        setLoadingShows(true);
+        const res = await fetch("/api/show/on-the-air");
+        console.log("Réponse fetch séries status :", res.status);
+        const data = await res.json();
+        if (res.ok) {
+          setShows(data);
+        } else {
+          console.error("Détails erreur API séries :", data);
+          setErrorShows(data.error || "Erreur lors de la récupération des séries");
+        }
+      } catch (error) {
+        console.error("Erreur réseau séries :", error);
+        setErrorShows("Erreur de connexion pour les séries");
+      } finally {
+        setLoadingShows(false);
       }
     };
 
     if (session) {
       fetchMovies();
+      fetchShows();
     }
   }, [session]);
-
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Erreur : {error}</div>;
+  if (errorMovies || errorShows) {
+    return (
+      <div>
+        {errorMovies && <div>Erreur films : {errorMovies}</div>}
+        {errorShows && <div>Erreur séries : {errorShows}</div>}
+      </div>
+    );
   }
 
   if (session) {
@@ -80,10 +107,24 @@ export const Content = ({ children }: PropsWithChildren) => {
       >
         {children}
 
-        {/* Intégration du carousel */}
+        {/* Intégration du carousel pour les films */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Now Playing</h2>
-          <MovieCarousel movies={movies} pageMode={theme === "dark" ? "primary" : "secondary"} />
+          {loadingMovies ? (
+            <div>Chargement des films...</div>
+          ) : (
+            <MovieCarousel movies={movies} pageMode={theme === "dark" ? "primary" : "secondary"} />
+          )}
+        </div>
+
+        {/* Intégration du carousel pour les séries */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">On the Air</h2>
+          {loadingShows ? (
+            <div>Chargement des séries...</div>
+          ) : (
+            <MovieCarousel movies={shows} pageMode={theme === "dark" ? "primary" : "secondary"} />
+          )}
         </div>
       </div>
     );
