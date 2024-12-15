@@ -179,11 +179,11 @@ export const AppSidebar: React.FC = () => {
     >
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu> 
-            {menuItems.discover.map((item) => (
-              <SidebarMenuItem key={item.title} onClick={() => setIsSidebarOpen(false)}>
+          <SidebarMenu>
+            {item.map((item) => (
+              <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <Link href={item.href}>
+                  <a href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
                   </Link>
@@ -191,13 +191,13 @@ export const AppSidebar: React.FC = () => {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-          <SidebarGroupLabel>Films</SidebarGroupLabel>
+          <SidebarGroupLabel>Movies</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.movies.map((item) => (
                 <SidebarMenuItem key={item.title} onClick={() => setIsSidebarOpen(false)}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.href}>
+                    <a href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -206,14 +206,13 @@ export const AppSidebar: React.FC = () => {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-
           <SidebarGroupLabel>TV Shows</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.shows.map((item) => (
                 <SidebarMenuItem key={item.title} onClick={() => setIsSidebarOpen(false)}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.href}>
+                    <a href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
