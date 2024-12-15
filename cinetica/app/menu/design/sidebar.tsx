@@ -33,49 +33,47 @@ interface SidebarProps extends PropsWithChildren {
   isSmallScreen?: boolean;
 }
 
-const menuItems = {
-  movies: [
-    {
-      title: "Now playing",
-      href: "/menu/movie/now-playing",
-      icon: Popcorn,
-    },
-    {
-      title: "Popular",
-      href: "/menu/movie/popular",
-      icon: UserRound,
-    },
-    {
-      title: "Top rated",
-      href: "/menu/movie/top-rated",
-      icon: BookmarkCheck,
-    },
-  ],
-  shows: [
-    {
-      title: "On the air",
-      href: "/menu/show/on-the-air",
-      icon: MonitorPlay,
-    },
-    {
-      title: "Popular",
-      href: "/menu/show/popular",
-      icon: UserRound,
-    },
-    {
-      title: "Top rated",
-      href: "/menu/show/top-rated",
-      icon: BookmarkCheck,
-    },
-  ],
-  discover: [
-    {
-      title: "Discover",
-      href: "/menu",
-      icon: Telescope,
-    },
-  ],
-};
+const item = [
+  {
+    title: "Discover",
+    url: "#",
+    icon: Telescope,
+  },
+];
+const itemsMovie = [
+  {
+    title: "Now playing",
+    url: "#",
+    icon: Popcorn,
+  },
+  {
+    title: "Popular",
+    url: "#",
+    icon: UserRound,
+  },
+  {
+    title: "Top rated",
+    url: "#",
+    icon: BookmarkCheck,
+  },
+];
+const itemsShow = [
+  {
+    title: "On the air",
+    url: "#",
+    icon: MonitorPlay,
+  },
+  {
+    title: "Popular",
+    url: "#",
+    icon: UserRound,
+  },
+  {
+    title: "Top rated",
+    url: "#",
+    icon: BookmarkCheck,
+  },
+];
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
   children, 
@@ -98,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
       <div 
         className={`h-full 
-          ${isSmallScreen ? 'absolute top-20 left-0 w-64 z-50 transform transition-transform duration-300 ease-in-out' : 'relative block w-64'}
+          ${isSmallScreen ? 'absolute top-20 left-0 w-64 z-50 transform transition-transform duration-300 ease-in-out' : 'relative block'}
           ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}
           ${isSmallScreen && isOpen ? 'translate-x-0' : (isSmallScreen ? '-translate-x-full' : '')}
         `} 
@@ -107,7 +105,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {isSmallScreen && onClose && (
           <button 
             onClick={onClose} 
-            className="absolute top-4 right-4"
+            className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+            aria-label="Close sidebar"
           >
             <X />
           </button>
@@ -165,7 +164,7 @@ export const AppSidebar: React.FC = () => {
   const handleSignOut = () => {
     document.cookie.split(";").forEach((cookie) => {
       const [name] = cookie.split("=");
-      document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+      document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     });
     signOut();
   };
@@ -183,39 +182,41 @@ export const AppSidebar: React.FC = () => {
             {item.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url}>
+                  <a href="/menu"> {/* Route principale */}
                     <item.icon />
                     <span>{item.title}</span>
-                  </Link>
+                  </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
+          
           <SidebarGroupLabel>Movies</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.movies.map((item) => (
-                <SidebarMenuItem key={item.title} onClick={() => setIsSidebarOpen(false)}>
+              {itemsMovie.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={`/menu/movie/${item.title.toLowerCase().replace(" ", "-")}`}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </Link>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+
           <SidebarGroupLabel>TV Shows</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.shows.map((item) => (
-                <SidebarMenuItem key={item.title} onClick={() => setIsSidebarOpen(false)}>
+              {itemsShow.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={`/menu/show/${item.title.toLowerCase().replace(" ", "-")}`}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </Link>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -251,4 +252,4 @@ export const AppSidebar: React.FC = () => {
       </SidebarContent>
     </Sidebar>
   );
-};
+}; 

@@ -2,8 +2,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Importer useRouter
 // Composants UI
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+// Import des assets
 import Logo from "../logo1.jpg";
 import localFont from "next/font/local";
 const anton = localFont({
@@ -25,24 +26,6 @@ const anton = localFont({
   style: "normal",
   variable: "--font-anton",
 });
-
-const SigninButton = () => {
-  const { data: session } = useSession();
-
-  if (!session) {
-    return (
-      <div className="flex justify-center">
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/menu" })}
-          className="text-green-600"
-        >
-          Sign In with Google
-        </button>
-      </div>
-    );
-  }
-  return null;
-};
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -54,6 +37,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
+    setLoading(true);  // Démarrer le chargement
+
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -133,12 +118,13 @@ export default function LoginPage() {
               <div className="text-red-500 text-sm">{error}</div>
             )}
           </div>
-            <CardFooter className="flex justify-center mt-5">
+          <CardFooter className="flex justify-center mt-5">
             <Button 
               className="bg-[#8E8FC3] rounded-full text-white dark:text-black hover:bg-black dark:hover:bg-white" 
               type="submit"
+              disabled={loading}  // Désactivation du bouton pendant le chargement
             >
-              Connexion
+              {loading ? "Chargement..." : "Connexion"}  {/* Affichage de l'état de chargement */}
             </Button>
           </CardFooter>
         </form>
