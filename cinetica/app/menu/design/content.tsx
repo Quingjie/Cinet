@@ -3,30 +3,24 @@
 
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "../theme-provider";
-import MovieCarousel from "../../../components/ui/MovieCarousel"; // Chemin vers le carousel
 
-interface Movie {
-  id: number;
-  title: string;
-  release_date: string;
-  poster_path: string | null;
-  vote_average: number;
-  overview: string;
-}
+import MovieCarousel from "../../../components/ui/MovieCarousel";
+import ShowCarousel from "../../../components/ui/ShowCarousel";
+
+import { Movie } from '@/app/entities/movie'; 
+import { Show } from '@/app/entities/show'; 
 
 export const Content = ({ children }: PropsWithChildren) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const { theme } = useTheme();
 
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [shows, setShows] = useState<Movie[]>([]); // Nouvel état pour les séries
-  const [loadingMovies, setLoadingMovies] = useState(true);
-  const [loadingShows, setLoadingShows] = useState(true);
-  const [errorMovies, setErrorMovies] = useState<string | null>(null);
-  const [errorShows, setErrorShows] = useState<string | null>(null);
+  const [shows, setShows] = useState<Show[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -35,100 +29,93 @@ export const Content = ({ children }: PropsWithChildren) => {
   }, [status, router]);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        setLoadingMovies(true);
-        const res = await fetch("/api/movie/now-playing");
-        console.log("Réponse fetch films status :", res.status);
-        const data = await res.json();
-        if (res.ok) {
-          setMovies(data);
-        } else {
-          console.error("Détails erreur API films :", data);
-          setErrorMovies(data.error || "Erreur lors de la récupération des films");
-        }
-      } catch (error) {
-        console.error("Erreur réseau films :", error);
-        setErrorMovies("Erreur de connexion pour les films");
-      } finally {
-        setLoadingMovies(false);
-      }
-    };
+    const fetchData = async () => {
+      setLoading(true);
+      console.log("Current pathname:", pathname);
 
-    const fetchShows = async () => {
       try {
-        setLoadingShows(true);
-        const res = await fetch("/api/show/on-the-air");
-        console.log("Réponse fetch séries status :", res.status);
-        const data = await res.json();
-        if (res.ok) {
-          setShows(data);
-        } else {
-          console.error("Détails erreur API séries :", data);
-          setErrorShows(data.error || "Erreur lors de la récupération des séries");
+        let endpoint = "";
+
+        if (pathname === "/menu") {
+          const [moviesRes, showsRes] = await Promise.all([
+            fetch("/api/movie/now-playing"),
+            fetch("/api/show/on-the-air")
+          ]);
+          setMovies(await moviesRes.json());
+          setShows(await showsRes.json());
+        } else if (pathname.includes("/menu/movie")) {
+          if (pathname.includes("now-playing")) endpoint = "/api/movie/now-playing";
+          if (pathname.includes("popular")) endpoint = "/api/movie/popular";
+          if (pathname.includes("top-rated")) endpoint = "/api/movie/top-rated";
+          const moviesRes = await fetch(endpoint);
+          setMovies(await moviesRes.json());
+          setShows([]);
+        } else if (pathname.includes("/menu/show")) {
+          console.log("Entering show condition");
+          if (pathname === "/menu/show/on-the-air") console.log("Fetching on-the-air shows"); endpoint = "/api/show/on-the-air";
+          if (pathname === "/menu/show/popular") endpoint = "/api/show/popular";
+          if (pathname === "/menu/show/top-rated") endpoint = "/api/show/top-rated";
+          console.log("Selected endpoint:", endpoint);
+          const showsRes = await fetch(endpoint);
+          setShows(await showsRes.json());
+          setMovies([]);
         }
       } catch (error) {
-        console.error("Erreur réseau séries :", error);
-        setErrorShows("Erreur de connexion pour les séries");
+        console.error("Erreur lors de la récupération des données :", error);
       } finally {
-        setLoadingShows(false);
+        setLoading(false);
       }
     };
 
     if (session) {
-      fetchMovies();
-      fetchShows();
+      fetchData();
     }
-  }, [session]);
+  }, [pathname, session]);
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (errorMovies || errorShows) {
-    return (
-      <div>
-        {errorMovies && <div>Erreur films : {errorMovies}</div>}
-        {errorShows && <div>Erreur séries : {errorShows}</div>}
-      </div>
-    );
-  }
+  return (
+    <div
+      className={`p-6 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+      style={{ gridArea: "content" }}
+    >
+      {children}
 
-  if (session) {
-    return (
-      <div
-        className={`
-          p-6 
-          ${theme === 'dark' 
-            ? 'bg-gray-900 text-white' 
-            : 'bg-white text-black'}
-        `}
-        style={{ gridArea: "content" }}
-      >
-        {children}
+      {loading ? (
+        <div>Chargement...</div>
+      ) : (
+        <>
+          {pathname === "/menu" && (
+            <>
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold mb-4">Now Playing</h2>
+                <MovieCarousel movies={movies} pageMode={theme === "dark" ? "primary" : "secondary"} />
+              </div>
 
-        {/* Intégration du carousel pour les films */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Now Playing</h2>
-          {loadingMovies ? (
-            <div>Chargement des films...</div>
-          ) : (
-            <MovieCarousel movies={movies} pageMode={theme === "dark" ? "primary" : "secondary"} />
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold mb-4">On the Air</h2>
+                <ShowCarousel shows={shows} pageMode={theme === "dark" ? "primary" : "secondary"} />
+              </div>
+            </>
           )}
-        </div>
 
-        {/* Intégration du carousel pour les séries */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">On the Air</h2>
-          {loadingShows ? (
-            <div>Chargement des séries...</div>
-          ) : (
-            <MovieCarousel movies={shows} pageMode={theme === "dark" ? "primary" : "secondary"} />
+          {pathname.includes("/menu/movie") && movies.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4">Movies</h2>
+              <MovieCarousel movies={movies} pageMode={theme === "dark" ? "primary" : "secondary"} />
+            </div>
           )}
-        </div>
-      </div>
-    );
-  }
 
-  return null;
+          {pathname.includes("/menu/show") && shows.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4">TV Shows</h2>
+              <ShowCarousel shows={shows} pageMode={theme === "dark" ? "primary" : "secondary"} />
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };

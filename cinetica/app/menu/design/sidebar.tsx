@@ -77,11 +77,12 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
+          {/* Bouton Discover redirige vers la page principale */}
           <SidebarMenu>
             {item.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url}>
+                  <a href="/menu"> {/* Route principale */}
                     <item.icon />
                     <span>{item.title}</span>
                   </a>
@@ -89,13 +90,15 @@ export function AppSidebar() {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
+
+          {/* Boutons Movies */}
           <SidebarGroupLabel>Movies</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {itemsMovie.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={`/menu/movie/${item.title.toLowerCase().replace(" ", "-")}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
@@ -104,13 +107,15 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+
+          {/* Boutons TV Shows */}
           <SidebarGroupLabel>TV Shows</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {itemsShow.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={`/menu/show/${item.title.toLowerCase().replace(" ", "-")}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
