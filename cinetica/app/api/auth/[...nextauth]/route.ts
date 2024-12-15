@@ -2,29 +2,35 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import GoogleProvider from "next-auth/providers/google"
 import { RequestInternal } from "next-auth";
 import { users } from "@/repository/user";  // Assure-toi que ce chemin est correct
 
 export const authOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined, req: Pick<RequestInternal, "body" | "method" | "headers" | "query">
-      ): Promise<{ id: string; email: string; name: string; apiKey:string } | null> {
-        // Vérifier si les informations sont présentes
+      async authorize(credentials, req) {
+        // Ne pas intervenir si Google ou un autre provider est utilisé
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
-        // Recherche de l'utilisateur correspondant à l'email
+    
         const user = users.find((user) => user.username === credentials.email);
-
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          // Retourner les informations utilisateur uniquement si la connexion est réussie
           return {
             id: user.id,
             email: user.username,
@@ -32,18 +38,17 @@ export const authOptions = {
             apiKey: user.apiKey,
           };
         }
-
-        return null;  // Si l'authentification échoue
+        return null;
       },
-    }),
+    }),    
   ],
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
       // Ajouter les informations utilisateur au token JWT
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
+        token.id = user.id || token.id;
+        token.email = user.email || token.email;
+        token.name = user.name || token.name;
         token.apiKey = user.apiKey;
       }
       return token;
@@ -57,6 +62,15 @@ export const authOptions = {
         session.user.apiKey = token.apiKey as string;
       }
       return session;
+    },
+    events: {
+      async signOut({ token }: { token: any }) {
+        // Si un utilisateur se déconnecte via Google, révoquez sa session OAuth
+        if (token?.provider === "google") {
+          const logoutUrl = `https://accounts.google.com/o/oauth2/revoke?token=${token.accessToken}`;
+          await fetch(logoutUrl); // Révoquez l'accès Google
+        }
+      },
     },
   },
   pages: {

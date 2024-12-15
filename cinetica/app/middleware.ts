@@ -1,19 +1,31 @@
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default withAuth({
-  callbacks: {
-    authorized: ({ token }) => {
-      // Vérifie si un token existe pour autoriser l'utilisateur
-      return !!token;
+export default withAuth(
+  function middleware(req: NextRequest) {
+    console.log("Middleware - Requête :", req.url);
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ req, token }) => {
+        // Vérification plus stricte du token
+        console.log("Middleware - Token complet :", token);
+        
+        // Vérifiez des propriétés spécifiques du token
+        return token?.email !== undefined && 
+               token?.id !== undefined && 
+               token?.exp !== undefined;
+      },
     },
-  },
-  pages: {
-    signIn: "/login",  // Redirection vers /login si l'utilisateur n'est pas authentifié
-    error: "/error",   // (Optionnel) Redirection vers une page d'erreur en cas de problème
-  },
-});
+    pages: {
+      signIn: "/login",
+      error: "/error",
+    },
+  }
+);
 
-// Protéger des routes spécifiques (ajoute cette configuration)
 export const config = {
-  matcher: ["/dashboard/:path*", "/api/protected/:path*"], // Routes protégées
+  matcher: ['/menu/:path*', '/api/movie/:path*'],
 };
