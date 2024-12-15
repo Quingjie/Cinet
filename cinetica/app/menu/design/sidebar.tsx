@@ -102,14 +102,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         `} 
         style={{ gridArea: "sidebar" }}
       >
-        {isSmallScreen && onClose && (
-          <button 
-            onClick={onClose} 
-            className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
-            aria-label="Close sidebar"
-          >
-            <X />
-          </button>
+      {isSmallScreen && onClose && (
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+          aria-label="Close sidebar"
+        >
+          <X />
+        </button>
         )}
         {children}
       </div>
@@ -182,7 +182,7 @@ export const AppSidebar: React.FC = () => {
             {item.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href="/menu"> {/* Route principale */}
+                  <a href="/menu">
                     <item.icon />
                     <span>{item.title}</span>
                   </a>
@@ -213,7 +213,7 @@ export const AppSidebar: React.FC = () => {
               {itemsShow.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={`/menu/show/${item.title.toLowerCase().replace(" ", "-")}`}>
+                    <a href={`/menu/show/${item.title.toLowerCase().replace(/\s+/g, "-")}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
