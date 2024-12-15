@@ -55,7 +55,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, theme, size = 'default' })
   };
 
   const handleClick = () => {
-    router.push(`/menu/show/${movie.id}`);
+    router.push(`/menu/movie/${movie.id}`);
   };
 
   return (
