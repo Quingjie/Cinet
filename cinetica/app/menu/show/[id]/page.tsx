@@ -64,7 +64,7 @@ const ShowPage = async ({ params }: ShowPageProps) => {
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Acteurs principaux</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
-            {mainCast.map((actor: any) => (
+            {mainCast.map((actor: { id: number; profile_path: string | null; name: string; character: string }) => (
               <div key={actor.id} className="flex flex-col items-center text-center">
                 <Image
                   src={

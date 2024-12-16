@@ -1,4 +1,3 @@
-//app/api/movie/popular/route.ts
 import { Movie } from '../../../entities/movie';
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
