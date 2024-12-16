@@ -11,7 +11,7 @@ interface ExtendedUser extends NextAuthUser {
   apiKey: string;
 }
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",

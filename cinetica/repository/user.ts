@@ -1,10 +1,9 @@
-//repository/user.ts
 export interface User {
   id: string;
   username: string;
   name: string;
   password: string;
-  apiKey: string; // Ajout de apiKey
+  apiKey: string;
 }
 
 export const users : User[] = [

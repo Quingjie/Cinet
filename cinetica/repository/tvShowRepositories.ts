@@ -5,13 +5,11 @@ import { users } from "./user";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
-// Vérification de la clé API utilisateur
 const API_KEY = users[0]?.apiKey;
 if (!API_KEY) {
   throw new Error("Clé API utilisateur manquante");
 }
 
-// Récupérer les séries populaires
 export const fetchShows = async (): Promise<Show[]> => {
   const response = await fetch(`${API_BASE_URL}/tv/popular?api_key=${API_KEY}&language=fr-FR`);
 
@@ -20,10 +18,9 @@ export const fetchShows = async (): Promise<Show[]> => {
   }
 
   const data = await response.json();
-  return data.results; // Renvoie uniquement la liste des séries
+  return data.results;
 };
 
-// Récupérer les détails d'une série spécifique
 export const fetchShowDetails = async (showId: string): Promise<Show> => {
   const session = await getServerSession(authOptions);
 
@@ -40,7 +37,6 @@ export const fetchShowDetails = async (showId: string): Promise<Show> => {
   return response.json();
 };
 
-// Récupérer les crédits d'une série (acteurs, réalisateurs, etc.)
 export const fetchShowCredits = async (showId: string): Promise<any> => {
   const session = await getServerSession(authOptions);
 

@@ -1,4 +1,3 @@
-//repository/movieRepository.ts
 import { Movie } from "../app/entities/movie";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
@@ -34,7 +33,7 @@ export const fetchMovieDetails = async (movieId: string): Promise<Movie> => {
     throw new Error("Non authentifié");
   }
 
-  const userApiKey = users[0].apiKey; // Assurez-vous que `users` contient une clé API valide.
+  const userApiKey = users[0].apiKey;
   if (!userApiKey) {
     throw new Error("Clé API manquante");
   }

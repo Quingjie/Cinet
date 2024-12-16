@@ -1,4 +1,3 @@
-//types/next-auth.d.ts
 import "next-auth";
 import { DefaultSession } from "next-auth";
 
@@ -12,16 +11,16 @@ declare module "next-auth" {
 
   interface User {
     id: string;
-    apiKey?: string; // Ajoutez apiKey ici
+    apiKey?: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
-    apiKey?: string; // Ajoutez apiKey ici
-    email: string; // Ajoutez email ici
-    name?: string; // Ajoutez name ici
-    image?: string; // Gardez image comme optionnel
+    apiKey?: string;
+    email: string;
+    name?: string;
+    image?: string;
   }
 }
