@@ -1,4 +1,3 @@
-//app/api/show/top-rated/route.ts
 import { Show } from '../../../entities/show';
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";

@@ -15,15 +15,6 @@ interface ExtendedUser extends NextAuthUser {
 
 export const authOptions: AuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      authorization: {
-        params: {
-          scope: "openid email profile",
-        },
-      },
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {

@@ -31,6 +31,12 @@ interface SidebarProps extends PropsWithChildren {
   isSmallScreen?: boolean;
 }
 
+interface AppSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
+}
+
 const item = [
   {
     title: "Discover",
@@ -100,7 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         `} 
         style={{ gridArea: "sidebar" }}
       >
-      {isSmallScreen && isOpen && (
+      {isSmallScreen && isOpen && onClose && (
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
@@ -108,18 +114,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <X />
         </button>
-      )}
-      {children}
+        )}
+        {children}
       </div>
     </>
   );
 };
 
-export const AppSidebar: React.FC = () => {
+export const AppSidebar: React.FC<AppSidebarProps> = ({ 
+  isOpen = false, 
+  onClose, 
+  onOpen 
+}) => {
   const { data: session } = useSession();
   const { mode, setMode } = useTheme();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [localIsSidebarOpen, setLocalIsSidebarOpen] = useState(isOpen);
+
+  useEffect(() => {
+    setLocalIsSidebarOpen(isOpen);
+  }, [isOpen]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -169,9 +183,9 @@ export const AppSidebar: React.FC = () => {
 
   return (
     <Sidebar 
-      isOpen={isSmallScreen && isSidebarOpen} 
-      onClose={() => setIsSidebarOpen(false)}
-      onOpen={() => setIsSidebarOpen(true)}
+      isOpen={isSmallScreen && localIsSidebarOpen} 
+      onClose={() => {setLocalIsSidebarOpen(false); onClose && onClose();}}
+      onOpen={() => {setLocalIsSidebarOpen(true); onOpen && onOpen();}}
       isSmallScreen={isSmallScreen}
     >
       <SidebarContent>
@@ -226,7 +240,7 @@ export const AppSidebar: React.FC = () => {
               <SidebarGroupLabel>Actions</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {isSidebarOpen && (
+                  {localIsSidebarOpen && (
                     <>
                       <SidebarMenuItem>
                         <SidebarMenuButton onClick={handleSignOut}>

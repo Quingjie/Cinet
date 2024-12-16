@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import { PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "../theme-provider";
+import { AppSidebar } from "./sidebar";
+import { Header } from "./header";
 
 export const ApplicationLayout = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
   const { theme } = useTheme();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -42,6 +49,12 @@ export const ApplicationLayout = ({ children }: PropsWithChildren) => {
           width: "100%",
         }}
       >
+        <Header onSidebarToggle={handleSidebarToggle} />
+        <AppSidebar 
+          isOpen={isSidebarOpen} 
+          onClose={() => setIsSidebarOpen(false)} 
+          onOpen={() => setIsSidebarOpen(true)} 
+        />
         {children}
       </div>
     </div>
