@@ -145,8 +145,8 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
       }}
     >
       <div className="flex items-center space-x-4">
-        {isSmallScreen && session && (
-          <button 
+      {isSmallScreen && session && (
+        <button 
           onClick={() => props.onSidebarToggle && props.onSidebarToggle()}
           className={`mr-4 ${
             theme === "dark" 
@@ -154,6 +154,7 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
               : "text-black hover:bg-gray-200"
           } p-2 rounded-md transition-colors`}
         >
+          <Menu />
         </button>
         )}
         <Image
