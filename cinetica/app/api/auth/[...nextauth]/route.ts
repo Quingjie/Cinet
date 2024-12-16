@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
-import { AuthOptions, Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { users } from "@/repository/user";
@@ -12,8 +11,7 @@ interface ExtendedUser {
   apiKey?: string;
 }
 
-
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,7 +19,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<ExtendedUser | null> {
+      async authorize(credentials: Record<"email" | "password", string> | undefined) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -47,10 +45,9 @@ export const authOptions: AuthOptions = {
         token.email = user.email;
         token.apiKey = user.apiKey;
       }
-      console.log("JWT Token:", token);
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
@@ -75,4 +72,4 @@ export const authOptions: AuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export const { GET, POST } = handler;
