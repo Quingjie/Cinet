@@ -35,8 +35,8 @@ const moviePage = async ({ params }: moviePageProps) => {
 
     const mainCast = credits.cast ? credits.cast.slice(0, 5) : [];
 
-    const director = credits.crew?.find((member: any) => member.job === "Director")?.name || "Non spécifié";
-    const composer = credits.crew?.find((member: any) => member.job === "Original Music Composer")?.name || "Non spécifié";
+    const director = credits.crew?.find((member: { job: string; name: string }) => member.job === "Director")?.name || "Non spécifié";
+    const composer = credits.crew?.find((member: { job: string; name: string }) => member.job === "Original Music Composer")?.name || "Non spécifié";
 
     return (
       <div className="p-6">

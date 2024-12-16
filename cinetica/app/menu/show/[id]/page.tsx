@@ -35,13 +35,9 @@ const ShowPage = async ({ params }: ShowPageProps) => {
 
     const mainCast = credits.cast ? credits.cast.slice(0, 5) : [];
 
-    const director = credits.crew?.find((member: any) => 
-      member.job === "Director" || member.job === "Series Director"
-    )?.name || "Non spécifié";
+    const director = credits.crew?.find((member: { job: string; name: string }) => member.job === "Director")?.name || "Non spécifié";
 
-    const composer = credits.crew?.find((member: any) => 
-      member.job === "Original Music Composer" || member.job === "Music"
-    )?.name || "Non spécifié";
+    const composer = credits.crew?.find((member: { job: string; name: string }) => member.job === "Director")?.name || "Non spécifié";
 
     return (
       <div className="p-6">
