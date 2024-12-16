@@ -3,8 +3,7 @@ import NextAuth, { AuthOptions, User as NextAuthUser  } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import { RequestInternal } from "next-auth";
-import { users } from "@/repository/user";  // Assure-toi que ce chemin est correct
+import { users } from "@/repository/user";
 
 interface ExtendedUser extends NextAuthUser {
   id: string;
@@ -31,23 +30,21 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<{ id: string; email: string; name: string; apiKey:string } | null> {
-        // Vérifier si les informations sont présentes
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        // Recherche de l'utilisateur correspondant à l'email
         const user = users.find((user) => user.username === credentials.email);
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
           return {
             id: user.id,
             email: user.username,
             name: user.name,
-            apiKey: user.apiKey || '', // Fournir une chaîne vide si apiKey est undefined
+            apiKey: user.apiKey || '',
           } as ExtendedUser;
         }
 
-        return null;  // Si l'authentification échoue
+        return null;
       },
     }),    
   ],
@@ -70,7 +67,6 @@ export const authOptions: AuthOptions = {
         if (token.apiKey) {
           (session.user as any).apiKey = token.apiKey;
         }
-
       }
       console.log("Session:", session); 
       return session;
@@ -78,10 +74,9 @@ export const authOptions: AuthOptions = {
   },
   events: {
     async signOut({ token }: { token: any }) {
-      // Si un utilisateur se déconnecte via Google, révoquez sa session OAuth
       if (token?.provider === "google") {
         const logoutUrl = `https://accounts.google.com/o/oauth2/revoke?token=${token.accessToken}`;
-        await fetch(logoutUrl); // Révoquez l'accès Google
+        await fetch(logoutUrl);
       }
     },
   },
@@ -91,7 +86,7 @@ export const authOptions: AuthOptions = {
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
-    maxAge: 30 * 24 * 60 * 60, // 30 jours
+    maxAge: 30 * 24 * 60 * 60,
   },
   pages: {
     signIn: "/login",
