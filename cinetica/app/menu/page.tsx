@@ -1,4 +1,3 @@
-//app/menu/page.tsx
 "use client";
 
 "use client";

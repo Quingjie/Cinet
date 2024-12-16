@@ -184,8 +184,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   return (
     <Sidebar 
       isOpen={isSmallScreen && localIsSidebarOpen} 
-      onClose={() => {setLocalIsSidebarOpen(false); onClose && onClose();}}
-      onOpen={() => {setLocalIsSidebarOpen(true); onOpen && onOpen();}}
+      onClose={() => {setLocalIsSidebarOpen(false); if (onClose) onClose();}}
+      onOpen={() => {setLocalIsSidebarOpen(true); if (onOpen) onOpen();}}
       isSmallScreen={isSmallScreen}
     >
       <SidebarContent>

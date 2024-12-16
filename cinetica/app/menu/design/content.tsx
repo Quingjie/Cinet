@@ -1,4 +1,3 @@
-//app/menu/design/content.tsx
 'use client';
 
 import { PropsWithChildren, useEffect, useState } from "react";

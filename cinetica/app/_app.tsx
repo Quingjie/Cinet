@@ -4,12 +4,12 @@ import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { ProtectedRoute } from "@/components/ui/ProtectedRoute";
 import "../globals.css";
-import { usePathname } from "next/navigation"; // Import de usePathname
+import { usePathname } from "next/navigation";
 
 const noAuthRequired = ["/", "/login"];
 
 export default function App({ Component, pageProps }: AppProps) {
-  const pathname = usePathname(); // Récupération du pathname actuel
+  const pathname = usePathname();
   const isProtected = !noAuthRequired.includes(pathname || "");
 
   return (

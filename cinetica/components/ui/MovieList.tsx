@@ -9,7 +9,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
       {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
+        <MovieCard key={movie.id} movie={movie} theme="light" />
       ))}
     </div>
   );

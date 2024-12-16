@@ -17,7 +17,6 @@ html, body {
 }
 
 @layer base {
-  /* Définition des couleurs pour le thème clair */
   :root {
     color-scheme: light;
     --background: white;

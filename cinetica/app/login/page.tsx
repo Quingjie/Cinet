@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-// Composants UI
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// Import des assets
 import Logo from "../logo1.jpg";
 import localFont from "next/font/local";
 
@@ -30,7 +28,6 @@ const SigninButton = () => {
   const { data: session } = useSession();
 
   if (!session) {
-    // Affiche le bouton pour se connecter si aucune session n'existe
     return (
       <div className="flex justify-center">
         <button
@@ -43,7 +40,6 @@ const SigninButton = () => {
     );
   }
 
-  // Le bouton "Sign Out" n'est pas affiché sur la page de connexion après déconnexion
   return null;
 };
 

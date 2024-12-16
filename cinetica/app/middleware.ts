@@ -10,10 +10,8 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({token }) => {
-        // Vérification plus stricte du token
         console.log("Middleware - Token complet :", token);
         
-        // Vérifiez des propriétés spécifiques du token
         return token?.email !== undefined && 
                token?.id !== undefined && 
                token?.exp !== undefined;

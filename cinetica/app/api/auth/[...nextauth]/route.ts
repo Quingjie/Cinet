@@ -1,7 +1,5 @@
-//app/api/auth/[...nextauth]/route.ts
 import NextAuth, { AuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 import { users } from "@/repository/user";

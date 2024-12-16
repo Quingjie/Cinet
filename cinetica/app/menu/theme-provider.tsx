@@ -21,13 +21,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    // Initialise le mode sauvegardé
     const savedMode = localStorage.getItem('themeMode') as ThemeMode;
     if (savedMode) {
       setMode(savedMode);
     }
 
-    // Fonction pour déterminer le thème
     const determineTheme = () => {
       if (mode === 'auto') {
         const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -36,12 +34,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return mode;
     };
 
-    // Applique le thème initial
     const initialTheme = determineTheme();
     setTheme(initialTheme);
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
 
-    // Écouteur pour les changements de préférences système
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       if (mode === 'auto') {
@@ -59,7 +55,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMode(newMode);
     localStorage.setItem('themeMode', newMode);
 
-    // Si manuel, détermine le thème immédiatement
     if (newMode !== 'auto') {
       setTheme(newMode);
       document.documentElement.classList.toggle('dark', newMode === 'dark');

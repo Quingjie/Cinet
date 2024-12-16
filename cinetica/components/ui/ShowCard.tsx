@@ -3,7 +3,7 @@ import { FaStar } from "react-icons/fa";
 import { Show } from "@/app/entities/show";
 import localFont from "next/font/local";
 import "@/app/globals.css";
-import { useRouter } from "next/navigation"; // Import du router
+import { useRouter } from "next/navigation";
 
 const anton = localFont({
   src: "../../app/fonts/Anton,Antonio/Anton/Anton-Regular.ttf",
@@ -25,7 +25,7 @@ const formatDate = (date: string) => {
 };
 
 const ShowCard: React.FC<ShowCardProps> = ({ show, theme, size = "default" }) => {
-  const router = useRouter(); // Initialisation du router
+  const router = useRouter();
 
   const cardStyles: { [key: string]: React.CSSProperties } = {
     default: {
@@ -54,7 +54,7 @@ const ShowCard: React.FC<ShowCardProps> = ({ show, theme, size = "default" }) =>
   };
 
   const handleClick = () => {
-    router.push(`/menu/show/${show.id}`); // Redirection vers la page du film
+    router.push(`/menu/show/${show.id}`);
   };
 
   return (
@@ -65,7 +65,7 @@ const ShowCard: React.FC<ShowCardProps> = ({ show, theme, size = "default" }) =>
           : "bg-white text-gray-800 hover:shadow-lg transition-shadow duration-300"
       }`}
       style={cardStyles[size]}
-      onClick={handleClick} // Ajout de l'événement onClick
+      onClick={handleClick}
     >
       {show.poster_path && (
         <Image

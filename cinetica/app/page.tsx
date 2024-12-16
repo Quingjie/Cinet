@@ -7,9 +7,8 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirection vers /menu
     router.replace('/menu');
   }, [router]);
 
-  return null; // On peut afficher un écran de chargement ici si nécessaire
+  return null;
 }

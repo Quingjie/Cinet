@@ -33,12 +33,10 @@ const moviePage = async ({ params }: moviePageProps) => {
       ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
       : null;
 
-    // Filtrer les acteurs principaux (limiter à 5)
     const mainCast = credits.cast ? credits.cast.slice(0, 5) : [];
 
     return (
       <div className="p-6">
-        {/* Section principale avec les détails de la série */}
         <div className="flex items-start gap-6">
           {posterUrl && (
             <Image

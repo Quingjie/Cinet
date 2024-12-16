@@ -1,4 +1,3 @@
-//app/menu/layout.tsx
 'use client';
 
 import { SidebarProvider } from "@/components/ui/sidebar";
