@@ -1,62 +1,100 @@
-//app/api/movie/now-playing/route.ts
-import { Movie } from "../../../entities/movie";
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
-import "next-auth";
+import NextAuth, { AuthOptions, User as NextAuthUser } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
+import { JWT } from "next-auth/jwt";
 import { users } from "@/repository/user";
 
-export async function GET() {
-  try {
-    const session = await getServerSession(authOptions);
-
-    console.log("Session récupérée :", JSON.stringify(session, null, 2));
-
-    if (!session || !session.user) {
-      console.error("Authentification échouée : Aucune session valide");
-      return NextResponse.json({ 
-        error: "Non authentifié", 
-        details: "Aucune session trouvée" 
-      }, { status: 401 });
-    }
-
-    const userApiKey = session.user.apiKey || users[0]?.apiKey;
-    if (!userApiKey) {
-      console.error("Erreur : Clé API manquante");
-      return NextResponse.json({ error: "Clé API manquante" }, { status: 401 });
-    }
-
-    const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${userApiKey}`, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      console.error("Erreur lors de l'appel à TMDB :", response.status, response.statusText);
-      return NextResponse.json({ 
-        error: `Erreur TMDB ${response.status}`, 
-        details: response.statusText 
-      }, { status: response.status });
-    }
-
-    const data = await response.json();
-
-    const movies: Movie[] = data.results.map((movie: any) => ({
-      id: movie.id,
-      title: movie.title,
-      release_date: movie.release_date,
-      overview: movie.overview,
-      poster_path: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
-      vote_average: movie.vote_average || 0,
-    }));
-
-    return NextResponse.json(movies);
-  } catch (error) {
-    console.error("Erreur lors de la récupération des films :", error);
-    return NextResponse.json({ 
-      error: "Erreur interne du serveur", 
-      details: error instanceof Error ? error.message : "Erreur inconnue" 
-    }, { status: 500 });
-  }
+interface ExtendedUser extends NextAuthUser {
+  id: string;
+  email: string;
+  name: string;
+  apiKey: string;
 }
+
+type Credentials = {
+  email: string;
+  password: string;
+} | undefined;
+
+export const authOptions: AuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials: Credentials): Promise<ExtendedUser | null> {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const user = users.find((user) => user.username === credentials.email);
+        if (user && bcrypt.compareSync(credentials.password, user.password)) {
+          return {
+            id: user.id,
+            email: user.username,
+            name: user.name,
+            apiKey: user.apiKey || '',
+          };
+        }
+
+        return null;
+      },
+    }),    
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.apiKey = (user as ExtendedUser).apiKey;
+      }
+      console.log("JWT Token:", token);
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        
+        // Type assertion for adding apiKey to session
+        const extendedSessionUser = session.user as ExtendedUser;
+        extendedSessionUser.apiKey = token.apiKey as string;
+      }
+      console.log("Session:", session); 
+      return session;
+    },
+  },
+  events: {
+    async signOut({ token }: { token: JWT }) {
+      if (token?.provider === "google") {
+        const logoutUrl = `https://accounts.google.com/o/oauth2/revoke?token=${token.accessToken as string}`;
+        await fetch(logoutUrl);
+      }
+    },
+  },
+  session: {
+    maxAge: 30 * 24 * 60 * 60,
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/login",
+  },
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
