@@ -1,17 +1,17 @@
-import NextAuth, { AuthOptions, User as NextAuthUser } from "next-auth";
+import NextAuth from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { JWT } from "next-auth/jwt";
 import { users } from "@/repository/user";
 
-interface ExtendedUser extends NextAuthUser {
+interface ExtendedUser {
   id: string;
   email: string;
   name: string;
   apiKey: string;
 }
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -54,21 +54,10 @@ const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        if (token.apiKey) {
-          (session.user as { apiKey: string }).apiKey = token.apiKey;
-        }
+        (session.user as any).apiKey = token.apiKey;
       }
-      console.log("Session:", session);
       return session;
-    },
-  },
-  events: {
-    async signOut({ token }: { token: JWT }) {
-      if (token?.provider === "google") {
-        const logoutUrl = `https://accounts.google.com/o/oauth2/revoke?token=${token.accessToken}`;
-        await fetch(logoutUrl);
-      }
-    },
+    }
   },
   session: {
     strategy: "jwt",
