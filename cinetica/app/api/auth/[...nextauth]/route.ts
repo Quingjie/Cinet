@@ -2,14 +2,7 @@ import NextAuth from "next-auth";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { users } from "@/repository/user";
-
-interface ExtendedUser {
-  id: string;
-  email: string;
-  name: string;
-  apiKey?: string;
-}
+import { users, User } from "@/repository/user";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -30,8 +23,8 @@ export const authOptions: AuthOptions = {
             id: user.id,
             email: user.username,
             name: user.name,
-            apiKey: user.apiKey || '',
-          } as ExtendedUser;
+            apiKey: user.apiKey,
+          };
         }
 
         return null;
@@ -43,6 +36,7 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.name = user.name;
         token.apiKey = user.apiKey;
       }
       return token;
@@ -52,7 +46,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        (session.user as ExtendedUser).apiKey = token.apiKey;
+        (session.user as User & { apiKey?: string }).apiKey = token.apiKey ?? '';
       }
       return session;
     }
