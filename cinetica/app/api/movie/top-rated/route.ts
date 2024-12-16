@@ -1,7 +1,7 @@
 import { Movie } from '../../../entities/movie';
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../auth/route';
 
 export async function GET() {
   try {
