@@ -24,25 +24,6 @@ const anton = localFont({
   variable: "--font-anton",
 });
 
-const SigninButton = () => {
-  const { data: session } = useSession();
-
-  if (!session) {
-    return (
-      <div className="flex justify-center">
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/menu" })}
-          className="text-green-600"
-        >
-          Sign In with Google
-        </button>
-      </div>
-    );
-  }
-
-  return null;
-};
-
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -137,7 +118,6 @@ export default function LoginPage() {
               >
                 Connexion
               </Button>
-              <SigninButton />
             </CardFooter>
           </form>
         </CardContent>
