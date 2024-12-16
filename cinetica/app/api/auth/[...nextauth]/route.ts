@@ -1,10 +1,9 @@
-import NextAuth from "next-auth";
-import { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { users, User } from "@/repository/user";
+import { users } from "@/repository/user";
 
-export const authOptions: AuthOptions = {
+export const localAuthOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,26 +30,6 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
-        token.apiKey = user.apiKey;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.name = token.name;
-        (session.user as User & { apiKey?: string }).apiKey = token.apiKey ?? '';
-      }
-      return session;
-    }
-  },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
@@ -64,6 +43,6 @@ export const authOptions: AuthOptions = {
   },
 };
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(localAuthOptions);
 
-export const { GET, POST } = handler;
+export default handler;
