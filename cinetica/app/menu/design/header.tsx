@@ -154,7 +154,6 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
               : "text-black hover:bg-gray-200"
           } p-2 rounded-md transition-colors`}
         >
-          <Menu size={24} />
         </button>
         )}
         <Image

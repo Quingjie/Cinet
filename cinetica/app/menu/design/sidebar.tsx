@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         `} 
         style={{ gridArea: "sidebar" }}
       >
-      {isSmallScreen && onClose && (
+      {isSmallScreen && isOpen && (
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
@@ -108,8 +108,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <X />
         </button>
-        )}
-        {children}
+      )}
+      {children}
       </div>
     </>
   );

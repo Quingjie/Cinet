@@ -1,5 +1,5 @@
 //app/api/auth/[...nextauth]/route.ts
-import NextAuth, { AuthOptions, User as NextAuthUser  } from "next-auth";
+import NextAuth, { AuthOptions, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
@@ -30,7 +30,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<{ id: string; email: string; name: string; apiKey:string } | null> {
+      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<ExtendedUser | null> {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -47,7 +47,7 @@ export const authOptions: AuthOptions = {
 
         return null;
       },
-    }),    
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -69,7 +69,7 @@ export const authOptions: AuthOptions = {
           (session.user as { apiKey: string }).apiKey = token.apiKey;
         }
       }
-      console.log("Session:", session); 
+      console.log("Session:", session);
       return session;
     },
   },
