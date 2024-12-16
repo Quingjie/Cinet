@@ -54,7 +54,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        (session.user as any).apiKey = token.apiKey;
+        (session.user as ExtendedUser).apiKey = token.apiKey;
       }
       return session;
     }
