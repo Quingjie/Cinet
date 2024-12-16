@@ -103,7 +103,7 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
       const seriesData = await seriesResponse.json();
 
       const movieSuggestions =
-        moviesData.results?.slice(0, 5).map((movie: any) => ({
+        moviesData.results?.slice(0, 5).map((movie: { id: number; title: string; poster_path: string | null }) => ({
           id: movie.id,
           title: movie.title,
           poster_path: movie.poster_path,
@@ -111,7 +111,7 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
         })) || [];
 
       const seriesSuggestions =
-        seriesData.results?.slice(0, 5).map((serie: any) => ({
+        seriesData.results?.slice(0, 5).map((serie: { id: number; name: string; poster_path: string | null }) => ({
           id: serie.id,
           title: serie.name,
           poster_path: serie.poster_path,
@@ -202,10 +202,12 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
                       onClick={() => handleSuggestionClick(movie)}
                     >
                       {movie.poster_path && (
-                        <img
+                        <Image
                           src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
                           alt={movie.title}
-                          className="w-12 h-18 object-cover rounded mr-4"
+                          width={48}
+                          height={72}
+                          className="object-cover rounded mr-4"
                         />
                       )}
                       <span>{movie.title}</span>

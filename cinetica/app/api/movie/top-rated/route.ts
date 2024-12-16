@@ -40,7 +40,7 @@ export async function GET() {
 
     const data = await response.json();
 
-    const movies: Movie[] = data.results.map((movie: any) => ({
+    const movies: Movie[] = data.results.map((movie: { id: number; title: string; release_date: string; overview: string; poster_path: string | null; vote_average: number; }) => ({
       id: movie.id,
       title: movie.title,
       release_date: movie.release_date,

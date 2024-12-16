@@ -40,7 +40,7 @@ export async function GET() {
 
     const data = await response.json();
 
-    const shows: Show[] = data.results.map((show: any) => ({
+    const shows: Show[] = data.results.map((show: { id: number; name: string; first_air_date: string; overview: string; poster_path: string | null; vote_average: number; }) => ({
       id: show.id,
       title: show.name,
       release_date: show.first_air_date,

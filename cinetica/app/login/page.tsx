@@ -67,7 +67,7 @@ export default function LoginPage() {
       } else {
         window.location.href = "./menu";
       }
-    } catch (error) {
+    } catch {
       setError("Une erreur est survenue lors de la connexion");
     }
   };
