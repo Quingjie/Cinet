@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { users } from "@/repository/user";
@@ -11,8 +10,7 @@ interface ExtendedUser {
   apiKey?: string;
 }
 
-
-export const authOptions: AuthOptions = {
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -20,7 +18,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<ExtendedUser | null> {
+      async authorize(credentials): Promise<ExtendedUser | null> {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -31,7 +29,7 @@ export const authOptions: AuthOptions = {
             id: user.id,
             email: user.username,
             name: user.name,
-            apiKey: user.apiKey || '',
+            apiKey: user.apiKey || "",
           } as ExtendedUser;
         }
 
@@ -46,7 +44,6 @@ export const authOptions: AuthOptions = {
         token.email = user.email;
         token.apiKey = user.apiKey;
       }
-      console.log("JWT Token:", token);
       return token;
     },
     async session({ session, token }) {
@@ -57,21 +54,19 @@ export const authOptions: AuthOptions = {
         (session.user as ExtendedUser).apiKey = token.apiKey;
       }
       return session;
-    }
+    },
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
   pages: {
-    signIn: "/login",
+    signIn: "/login", // Personnalisation de la page de connexion
   },
-};
-
-const handler = NextAuth(authOptions);
+});
 
 export { handler as GET, handler as POST };
