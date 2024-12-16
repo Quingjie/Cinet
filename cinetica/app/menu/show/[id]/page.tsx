@@ -1,5 +1,13 @@
 import { fetchShowDetails, fetchShowCredits } from "@/repository/tvShowRepositories";
 import Image from "next/image";
+import localFont from "next/font/local";
+
+const anton = localFont({
+  src: "../../../../app/fonts/Anton,Antonio/Anton/Anton-Regular.ttf",
+  weight: "400",
+  style: "normal",
+  variable: "--font-anton",
+});
 
 interface ShowPageProps {
   params: { id: string };
@@ -42,13 +50,13 @@ const ShowPage = async ({ params }: ShowPageProps) => {
             />
           )}
           <div>
-            <h1 className="text-3xl font-bold mb-4">{show.name || show.title}</h1>
-            <p className="text-gray-700">{show.overview}</p>
+            <h1 className={`text-3xl font-bold mb-4 ${anton.className}`}>{show.name || show.title}</h1>
+            <p className="text-[#8E8FC3]">{show.overview}</p>
             <p className="text-gray-500 mt-4">
-              <strong>Date de première diffusion :</strong> {formatDate(show.first_air_date || show.release_date)}
+              <strong>Date de première diffusion :</strong> <a className="text-[#8E8FC3]">{formatDate(show.first_air_date || show.release_date)}</a>
             </p>
             <p className="text-gray-500">
-              <strong>Note moyenne :</strong> {show.vote_average?.toFixed(1) || "Non noté"}
+              <strong>Note moyenne :</strong> <a className="text-[#8E8FC3]">{show.vote_average?.toFixed(1) || "Non noté"}</a>
             </p>
           </div>
         </div>
