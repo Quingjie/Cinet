@@ -54,7 +54,7 @@ const moviePage = async ({ params }: moviePageProps) => {
             <h1 className={`text-3xl font-bold mb-4 ${anton.className}`}>{movie.title || movie.title}</h1>
             <p className="text-[#8E8FC3]">{movie.overview}</p>
             <p className="text-gray-500 mt-4">
-              <strong>Date de première diffusion :</strong> {formatDate(movie.release_date)}
+              <strong>Date de première diffusion :</strong> <a className="text-[#8E8FC3]">{formatDate(movie.release_date)}</a>
             </p>
             <p className="text-gray-500">
               <strong>Note moyenne :</strong> <a className="text-[#8E8FC3]">{movie.vote_average?.toFixed(1) || "Non noté"} </a>

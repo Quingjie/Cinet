@@ -30,8 +30,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined, req: Pick<RequestInternal, "body" | "method" | "headers" | "query">
-      ): Promise<{ id: string; email: string; name: string; apiKey:string } | null> {
+      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<{ id: string; email: string; name: string; apiKey:string } | null> {
         // Vérifier si les informations sont présentes
         if (!credentials?.email || !credentials?.password) {
           return null;
