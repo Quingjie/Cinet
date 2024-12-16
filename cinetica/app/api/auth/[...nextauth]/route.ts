@@ -1,9 +1,18 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { users } from "@/repository/user";
 
-export const localAuthOptions: AuthOptions = {
+interface ExtendedUser {
+  id: string;
+  email: string;
+  name: string;
+  apiKey?: string;
+}
+
+
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -11,7 +20,7 @@ export const localAuthOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials: Record<"email" | "password", string> | undefined): Promise<ExtendedUser | null> {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -22,14 +31,34 @@ export const localAuthOptions: AuthOptions = {
             id: user.id,
             email: user.username,
             name: user.name,
-            apiKey: user.apiKey,
-          };
+            apiKey: user.apiKey || '',
+          } as ExtendedUser;
         }
 
         return null;
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.apiKey = user.apiKey;
+      }
+      console.log("JWT Token:", token);
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        (session.user as any).apiKey = token.apiKey;
+      }
+      return session;
+    }
+  },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
@@ -43,6 +72,6 @@ export const localAuthOptions: AuthOptions = {
   },
 };
 
-const handler = NextAuth(localAuthOptions);
+const handler = NextAuth(authOptions);
 
-export default handler;
+export { handler as GET, handler as POST };
