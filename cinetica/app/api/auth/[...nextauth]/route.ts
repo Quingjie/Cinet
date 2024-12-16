@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
-import { AuthOptions } from "next-auth";
+import { AuthOptions, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { users } from "@/repository/user";
@@ -8,8 +9,9 @@ interface ExtendedUser {
   id: string;
   email: string;
   name: string;
-  apiKey: string;
+  apiKey?: string;
 }
+
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -43,18 +45,17 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
-        token.name = user.name;
         token.apiKey = user.apiKey;
       }
       console.log("JWT Token:", token);
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        (session.user as any).apiKey = token.apiKey;
+        (session.user as ExtendedUser).apiKey = token.apiKey;
       }
       return session;
     }
