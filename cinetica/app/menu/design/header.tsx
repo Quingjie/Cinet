@@ -30,7 +30,6 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
   const { theme, mode, setMode } = useTheme();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<MovieSuggestion[]>([]);
-  const [loading, setLoading] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const router = useRouter();
 
@@ -86,7 +85,6 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
     }
 
     try {
-      setLoading(true);
 
       const [moviesResponse, seriesResponse] = await Promise.all([
         fetch(
@@ -123,8 +121,6 @@ export const Header = (props: PropsWithChildren & { onSidebarToggle?: () => void
       setSuggestions([...movieSuggestions, ...seriesSuggestions]);
     } catch (error) {
       console.error("Erreur lors de la recherche :", error);
-    } finally {
-      setLoading(false);
     }
   };
 

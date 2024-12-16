@@ -9,7 +9,7 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ req, token }) => {
+      authorized: ({token }) => {
         // Vérification plus stricte du token
         console.log("Middleware - Token complet :", token);
         

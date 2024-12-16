@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"; // Utilisation de usePathname
 import { useEffect } from "react";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const pathname = usePathname(); // Récupération du pathname actuel
 

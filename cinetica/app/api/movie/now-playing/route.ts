@@ -3,12 +3,10 @@ import { Movie } from "../../../entities/movie";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
-import { getToken } from "next-auth/jwt";
 import "next-auth";
 import { users } from "@/repository/user";
-import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 

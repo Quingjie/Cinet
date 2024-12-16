@@ -43,27 +43,6 @@ export const Content = ({ children }: PropsWithChildren) => {
     return "Content";
   };
 
-  const renderResponsiveCards = (items: Movie[] | Show[], type: 'movie' | 'show') => {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        {items.map((item) => (
-          type === 'movie' ? (
-            <MovieCard 
-              key={(item as Movie).id} 
-              movie={item as Movie} 
-              theme={theme === 'dark' ? 'light' : 'dark'} 
-            />
-          ) : (
-            <ShowCard 
-              key={(item as Show).id} 
-              show={item as Show} 
-              theme={theme === 'dark' ? 'light' : 'dark'} 
-            />
-          )
-        ))}
-      </div>
-    );
-  };
 
   useEffect(() => {
     if (status === "unauthenticated") {
