@@ -11,7 +11,7 @@ interface ExtendedUser {
   apiKey?: string;
 }
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
