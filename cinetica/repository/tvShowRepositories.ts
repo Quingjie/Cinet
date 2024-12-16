@@ -1,6 +1,6 @@
 import { Show } from "../app/entities/show";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import { authOptions } from "../app/lib/auth";
 import { users } from "./user";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";

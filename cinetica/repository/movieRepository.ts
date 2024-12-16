@@ -1,6 +1,6 @@
 import { Movie } from "../app/entities/movie";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import { authOptions } from "../app/lib/auth";
 import "next-auth";
 import { users } from "./user";
 
