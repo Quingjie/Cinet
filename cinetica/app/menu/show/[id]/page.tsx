@@ -35,6 +35,14 @@ const ShowPage = async ({ params }: ShowPageProps) => {
 
     const mainCast = credits.cast ? credits.cast.slice(0, 5) : [];
 
+    const director = credits.crew?.find((member: any) => 
+      member.job === "Director" || member.job === "Series Director"
+    )?.name || "Non spécifié";
+
+    const composer = credits.crew?.find((member: any) => 
+      member.job === "Original Music Composer" || member.job === "Music"
+    )?.name || "Non spécifié";
+
     return (
       <div className="p-6">
         <div className="flex items-start gap-6">
@@ -55,6 +63,12 @@ const ShowPage = async ({ params }: ShowPageProps) => {
             </p>
             <p className="text-gray-500">
               <strong>Note moyenne :</strong> <a className="text-[#8E8FC3]">{show.vote_average?.toFixed(1) || "Non noté"}</a>
+            </p>
+            <p className="text-gray-500">
+              <strong>Réalisateur :</strong> <a className="text-[#8E8FC3]">{director}</a>
+            </p>
+            <p className="text-gray-500">
+              <strong>Compositeur :</strong> <a className="text-[#8E8FC3]">{composer}</a>
             </p>
           </div>
         </div>
