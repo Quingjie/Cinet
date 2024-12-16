@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
-import { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { users, User } from "@/repository/user";
+import { users } from "@/repository/user"; // Assurez-vous que ce chemin est correct
 
-export const authOptions: AuthOptions = {
+// Configuration NextAuth (ne PAS l'exporter)
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,7 +12,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined) {
+      async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -46,10 +46,10 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        (session.user as User & { apiKey?: string }).apiKey = token.apiKey ?? '';
+        (session.user as { apiKey?: string }).apiKey = token.apiKey ?? '';
       }
       return session;
-    }
+    },
   },
   session: {
     strategy: "jwt",
@@ -64,6 +64,8 @@ export const authOptions: AuthOptions = {
   },
 };
 
+// Gestionnaire NextAuth (seule chose exportée)
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export const GET = handler;
+export const POST = handler;
